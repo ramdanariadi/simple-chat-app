@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: 500;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins';
+}
+body{
+    background-color: #E5E5E5;
+}
+.container{
+    margin: auto;
+    width: 400px;
+    background-color: rgb(255, 255, 255);
+    height: 90vh;
+    border-radius: 40px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.container::-webkit-scrollbar {
+    display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.header-n-searchbar{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+}
+.header{
+    width: calc(100% - 40px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    line-height: normal;
+    padding-bottom: 12px;
+    padding: 50px 20px 6px;
+    background-color: #ffffff;
+}
+.header > .header-left > .header-title {
+    margin-left: 18px;
+}
+.search-bar{
+    width: calc(100% - 80px);
+    padding: 13px 20px;
+    margin: 20px 20px 10px;
+    border-radius: 28px;
+    background-color: #F6F6F6;
+    justify-content: space-between;
+    display: flex;
+}
+.search-bar > input[type=text] {
+    width: 80%;
+    background-color: transparent;
+    border: 3px solid transparent;
+    outline: none;
+    color: #383737;
+}
+.search-bar > .voice-search{
+    color: #383737;
+}
+.user-list{
+    padding: 20px;
+    height: 100%;
+}
+.user-list > .user-list-item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+.user-list > .user-list-item > .username-n-last-message{
+    margin-left: 20px;
+}
+.user-list > .user-list-item > .username-n-last-message > span{
+    display: block;
+}
+.user-list > .user-list-item > .username-n-last-message > .username {
+    color: #000;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.user-list > .user-list-item > .username-n-last-message > .last-message {
+    color: #9C9797;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.bottom-nav-bar{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid rgba(4, 4, 4, 0.15);
+    background: #FFF;
+}
+.bottom-nav-bar > .bottom-nav-bar-list{
+    display: flex;
+    justify-content: space-around;
+}
+.bottom-nav-bar > .bottom-nav-bar-list > .bottom-nav-bar-list-item{
+    list-style-type: none;
+    padding: 21px;
+}
+.bottom-nav-bar > .bottom-nav-bar-list > .active{
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-image: linear-gradient(180deg, #55A99D 0%, #007665 100%) 1;
+}

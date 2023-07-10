@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/chat-room.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-n-spacer">
+            <header class="header">
+                <div class="header-left">
+                    <img src="icons/svg/left-arrow.svg" alt="">
+                    <img class="profile-picture" src="icons/img/profile-pic.png" alt="">
+                    <span class="user-profile">Smith Mathew</span>
+                </div>
+                <div class="header-right">
+                    <img class="voice-call" src="icons/svg/voice-call.svg" alt="">
+                    <img class="video-call" src="icons/svg/video-call.svg" alt="">
+                </div>
+            </header>
+            <div class="spacer"></div>
+        </div>
+        <div class="chat-list">
+            <!-- <div class="my-chat">
+                <span class="chat-text">
+                    Hello
+                </span>
+            </div>
+            <div class="other-chat">
+                <img class="profile-picture" src="icons/img/profile-pic.png" alt="">
+                <span class="chat-text">
+                    Hello
+                </span>
+            </div> -->
+        </div>
+        <div class="message-container">
+            <div class="chat-message">
+                <input class="chat" type="text" placeholder="Send Message">
+                <img class="send-message" src="icons/svg/papper-airplane.svg" alt="">
+            </div>
+            <div class="voice-note">
+                <img src="icons/svg/mic.svg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    async function fetchChatHistory (evt) {
+        (await fetch('http://localhost:8087/message', {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            // mode: "no-cors", // no-cors, *cors, same-origin
+            headers: {
+                "Content-Type": "application/json",
+            },
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify({
+                userIdFrom: userIdFrom,
+                userIdTo: userIdTo
+            })
+        })).json().then((data) => {
+            console.log(data)
+            console.log(data.body)
+            data.data.forEach((obj, index) => {
+                let chat = document.createElement('div')
+                let chatSpan = document.createElement('span')
+                if(obj.from === userIdFrom){
+                    chat.className =  'my-chat'
+                }else{
+                    chat.className =  'other-chat'
+                    let profilePicture = document.createElement('img')
+                    profilePicture.className = 'profile-picture'
+                    profilePicture.src = 'icons/img/profile-pic.png'
+                    chat.appendChild(profilePicture)
+                }
+                chatSpan.className = 'chat-text'
+                chatSpan.innerHTML = obj.message
+                chat.appendChild(chatSpan)
+                chatListDOM.appendChild(chat)
+            })
+        }).catch((err) => {
+            console.log(err)
+        }).finally(() => {
+            scrollToBottom()
+        })
+    }
+
+    window.onload = fetchChatHistory
+    const userIdFrom = 'u1';
+    const userIdTo = 'u2'
+
+    let message = {
+        sender :  userIdFrom,
+        recipient: userIdTo,
+        message : null
+    }
+
+    let chatListDOM = document.querySelector('.chat-list')
+
+    let socket = new WebSocket(`ws://127.0.0.1:8087/ws/${userIdFrom}`);
+
+    socket.onopen = () => {
+        console.log("connection open")
+    }
+
+    socket.onclose = () => {
+        console.log("connection close")
+    }
+
+    socket.onerror = () => {
+        console.log("connection error")
+    }
+
+    socket.onmessage = (msg) => {
+        console.log("incoming message : ")
+        console.table(msg.data)
+
+        const message = JSON.parse(msg.data);
+        const otherChat = document.createElement('div')
+        let chatSpan = document.createElement('span')
+        otherChat.className =  'other-chat'
+        let profilePicture = document.createElement('img')
+        profilePicture.className = 'profile-picture'
+        profilePicture.src = 'icons/img/profile-pic.png'
+        otherChat.appendChild(profilePicture)
+        chatSpan.className = 'chat-text'
+        chatSpan.innerHTML = message.message
+        otherChat.appendChild(chatSpan)
+        chatListDOM.appendChild(otherChat)
+
+        scrollToBottom()
+    } 
+
+    const sendMessageButton = document.querySelector('.send-message')
+    sendMessageButton.addEventListener('click', (evt) => {
+        const chat = document.querySelector('.chat')
+        const chatValue = chat.value
+        if (chatValue.trim() == '') return
+        
+        console.log('send message')
+        message.message = chat.value
+        socket.send(JSON.stringify(message))
+
+        let myChat = document.createElement('div')
+        let chatSpan = document.createElement('span')
+        myChat.className =  'my-chat'
+        chatSpan.className = 'chat-text'
+        chatSpan.innerHTML = chat.value
+        myChat.appendChild(chatSpan)
+        chatListDOM.appendChild(myChat)
+        chat.value = ''
+
+        scrollToBottom()
+    })
+
+    function scrollToBottom(){
+        const container = document.querySelector('.container')
+        container.scrollTop = container.scrollHeight
+    }
+
+</script>
+</html>
