@@ -12,8 +12,8 @@
             <header class="header">
                 <div class="header-left">
                     <img src="icons/svg/left-arrow.svg" alt="">
-                    <img class="profile-picture" src="icons/img/profile-pic.png" alt="">
-                    <span class="user-profile">Smith Mathew</span>
+                    <img class="profile-picture" src="https://tunas-grocery.s3.ap-southeast-1.amazonaws.com/images/users/user-1.jpeg" alt="">
+                    <span class="user-profile">Merry An.</span>
                 </div>
                 <div class="header-right">
                     <img class="voice-call" src="icons/svg/voice-call.svg" alt="">
@@ -48,7 +48,7 @@
 </body>
 <script type="text/javascript">
     async function fetchChatHistory (evt) {
-        (await fetch('http://localhost:8087/message/history', {
+        (await fetch('http://localhost:10000/message/history', {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             // mode: "no-cors", // no-cors, *cors, same-origin
             headers: {
@@ -63,7 +63,7 @@
         })).json().then((data) => {
             console.log(data)
             console.log(data.body)
-            data.data.forEach((obj, index) => {
+            data.data.reverse().forEach((obj, index) => {
                 let chat = document.createElement('div')
                 let chatSpan = document.createElement('span')
                 if(obj.from === userIdFrom){
@@ -72,7 +72,7 @@
                     chat.className =  'other-chat'
                     let profilePicture = document.createElement('img')
                     profilePicture.className = 'profile-picture'
-                    profilePicture.src = 'icons/img/profile-pic.png'
+                    profilePicture.src = 'https://tunas-grocery.s3.ap-southeast-1.amazonaws.com/images/users/user-1.jpeg'
                     chat.appendChild(profilePicture)
                 }
                 chatSpan.className = 'chat-text'
@@ -88,18 +88,24 @@
     }
 
     window.onload = fetchChatHistory
-    const userIdFrom = 'u1';
-    const userIdTo = 'u2'
+    const userIdFrom = '4eded9c2-2798-11ee-8e32-0242ac130003'
+    const userIdTo = '9388cb37-f57f-11ed-9dc2-0242ac130003'
+    // const userIdFrom = 'u1'
+    // const userIdTo = 'u2'
 
     let message = {
         sender :  userIdFrom,
+        senderName :  "Shop",
+        senderImageUrl : "https://play.google.com/store/apps/details?id=com.samsung.ecomm&hl=id",
         recipient: userIdTo,
+        recipientName: "Buyer",
+        recipientImageUrl: "https://tunas-grocery.s3.ap-southeast-1.amazonaws.com/images/users/user-1.jpeg",
         message : null
     }
 
     let chatListDOM = document.querySelector('.chat-list')
 
-    let socket = new WebSocket(`ws://127.0.0.1:8087/ws/${userIdFrom}`);
+    let socket = new WebSocket(`ws://127.0.0.1:10000/ws/${userIdFrom}`);
 
     socket.onopen = () => {
         console.log("connection open")
@@ -123,18 +129,17 @@
         otherChat.className =  'other-chat'
         let profilePicture = document.createElement('img')
         profilePicture.className = 'profile-picture'
-        profilePicture.src = 'icons/img/profile-pic.png'
+        profilePicture.src = 'https://tunas-grocery.s3.ap-southeast-1.amazonaws.com/images/users/user-1.jpeg'
         otherChat.appendChild(profilePicture)
         chatSpan.className = 'chat-text'
         chatSpan.innerHTML = message.message
         otherChat.appendChild(chatSpan)
         chatListDOM.appendChild(otherChat)
 
-        scrollToBottom()
+        // scrollToBottom()
     } 
 
-    const sendMessageButton = document.querySelector('.send-message')
-    sendMessageButton.addEventListener('click', (evt) => {
+    const sendMesasge = (evt) => {
         const chat = document.querySelector('.chat')
         const chatValue = chat.value
         if (chatValue.trim() == '') return
@@ -151,9 +156,15 @@
         myChat.appendChild(chatSpan)
         chatListDOM.appendChild(myChat)
         chat.value = ''
+    }
 
-        scrollToBottom()
+    const chatTag = document.querySelector('.chat')
+    chatTag.addEventListener('keydown', (evt) => {
+        if(evt.which ==  13) sendMesasge(evt)
     })
+
+    const sendMessageButton = document.querySelector('.send-message')
+    sendMessageButton.addEventListener('click', sendMesasge)
 
     function scrollToBottom(){
         const container = document.querySelector('.container')

@@ -48,7 +48,7 @@
 </body>
 <script type="text/javascript">
     async function fetchChatHistory (evt) {
-        (await fetch('http://localhost:8087/message/history', {
+        (await fetch('http://localhost:8080/message/history', {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             // mode: "no-cors", // no-cors, *cors, same-origin
             headers: {
@@ -99,7 +99,7 @@
 
     let chatListDOM = document.querySelector('.chat-list')
 
-    let socket = new WebSocket(`ws://127.0.0.1:8087/ws/${userIdFrom}`);
+    let socket = new WebSocket(`ws://127.0.0.1:8080/ws/${userIdFrom}`);
 
     socket.onopen = () => {
         console.log("connection open")
